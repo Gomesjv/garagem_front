@@ -22,6 +22,12 @@ const categorias = ref()
 
 async function salvar() {
     await modelosApi.adicionarModelo(modelo)
+    modelos.value = await modelosApi.buscarTodosOsModelos()
+}
+
+async function excluir(id) {
+    await modelosApi.excluirModelo(id)
+    modelos.value = await modelosApi.buscarTodosOsModelos()
 }
 
 onMounted(async () => {
@@ -34,7 +40,7 @@ onMounted(async () => {
 <template>
     <main>
         <div class="form">
-            <input type="text" placeholder="Nome" v-model="modelo.nome" class="input"/>
+            <input type="text" placeholder="Nome" v-model="modelo.nome" class="input" />
             <select v-model="modelo.marca" class="input" placeholder="Cor">
                 <option value="" selected disabled>Marca</option>
                 <option v-for="marca in marcas" :value="marca.id">{{ marca.descricao }}</option>
@@ -48,32 +54,41 @@ onMounted(async () => {
                 Enviar
             </button>
         </div>
+
+        <ul>
+            <li v-for="modelo in modelos" :key="modelo.id">
+                <span>
+                    ({{ modelo.id }}) - {{ modelo.nome }} -
+                </span>
+                <button @click="excluir(modelo.id)">X</button>
+            </li>
+        </ul>
     </main>
 </template>
 
 <style scoped>
-    .form {
-        display: flex;
-        flex-direction: column;
-        width: 50%;
-        margin: auto;
-        min-width: 250px;
-        gap: 20px;
-        padding: 10px;
-    }
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: auto;
+    min-width: 250px;
+    gap: 20px;
+    padding: 10px;
+}
 
-    .input {
-        border: none;
-        background-color: #ddd;
-        border-radius: 10px;
-        padding: 5px 10px;
-    }
+.input {
+    border: none;
+    background-color: #ddd;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
 
-    .btn-enviar {
-        background-color: transparent;
-        border-radius: 20px;
-        padding: 10px 20px;
-        font-weight: bolder;
-        text-transform: uppercase;
-    }
+.btn-enviar {
+    background-color: transparent;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-weight: bolder;
+    text-transform: uppercase;
+}
 </style>

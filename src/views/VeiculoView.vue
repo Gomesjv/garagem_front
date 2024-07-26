@@ -7,6 +7,7 @@ import { onMounted } from 'vue';
 import AcessoriosApi from '@/api/acessorios';
 import { useUploaderStore } from '@/stores/uploader';
 import { reactive } from 'vue';
+import VeiculoCard from '@/components/VeiculoCard.vue';
 
 const uploaderStore = useUploaderStore()
 const veiculosApi = new VeiculosApi();
@@ -36,12 +37,18 @@ const acessoriosEscolhidos = ref()
 async function salvar() {
     veiculo.foto_veiculo_attachment_key = await uploaderStore.uploadImage(file.value);
     await veiculosApi.adicionarVeiculo(veiculo)
+    veiculos.value = await veiculosApi.buscarTodosOsVeiculos()
 }
 
 const uploadImage = (e) => {
   file.value = e.target.files[0];
   previewImage.value = URL.createObjectURL(e.target.files[0]);
 };
+
+async function deletar(id) {
+    await veiculosApi.excluirVeiculo(id)
+    veiculos.value = await veiculosApi.buscarTodosOsVeiculos()
+}
 
 onMounted(async () => {
     veiculos.value = await veiculosApi.buscarTodosOsVeiculos()
@@ -75,6 +82,10 @@ onMounted(async () => {
                 Enviar
             </button>
         </div>
+
+        <div class="veiculos">
+            <VeiculoCard v-for="veiculo in veiculos" :item="veiculo" @deletar="deletar" :deletar="true" ></VeiculoCard>
+        </div>
     </main>
 </template>
 
@@ -102,5 +113,13 @@ onMounted(async () => {
         padding: 10px 20px;
         font-weight: bolder;
         text-transform: uppercase;
+    }
+
+    .veiculos {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 10px 20px;
+        align-items: center;
+        justify-content: space-around;
     }
 </style>

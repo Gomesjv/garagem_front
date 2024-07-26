@@ -1,5 +1,5 @@
 <script setup>
-defineProps(["item"])
+defineProps(["item", "deletar"])
 </script>
 
 <template>
@@ -19,6 +19,8 @@ defineProps(["item"])
                 {{ item.cor.descricao }}
             </p>
         </div>
+
+        <button class="deletar" v-if="deletar" @click="$emit('deletar', item.id)">Deletar</button>
     </div>
 </template>
 
@@ -28,6 +30,11 @@ defineProps(["item"])
         padding: 10px 0;
         box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
         border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
     }
 
     .info {
@@ -36,4 +43,17 @@ defineProps(["item"])
         align-items: center;
         gap: 20px;
     }
+
+    .deletar {
+        background-color: transparent;
+        width: 60%;
+        margin: 0 10px;
+        margin: auto;
+        cursor: pointer;
+        border-radius: 20px;
+        background-color: red;
+        padding: 10px 20px;
+        border: none;
+        color: white;
+    }   
 </style>    
